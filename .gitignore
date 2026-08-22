@@ -41,5 +41,6 @@ next-env.d.ts
 # OS
 Thumbs.db
 Desktop.ini
-.readme.mdCLAUDE.md
+.readme.md
 CLAUDE.md
+audit-report/
