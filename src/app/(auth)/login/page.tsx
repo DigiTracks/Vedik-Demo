@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { switchDemoRole, DEMO_PROFILES } from "@/lib/auth";
+import { switchDemoRole } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { LOGO_PATH } from "@/lib/utils";
 import type { Role } from "@/types";
@@ -10,7 +11,6 @@ import { Shield, BookOpen, GraduationCap, ArrowRight, Sparkles } from "lucide-re
 
 export default function LoginPage() {
   const router = useRouter();
-  const [selectedRole, setSelectedRole] = useState<Role>("school_admin");
 
   const handleQuickLaunch = (role: Role) => {
     switchDemoRole(role);
@@ -50,7 +50,7 @@ export default function LoginPage() {
         {/* Branding */}
         <div className="text-center space-y-3">
           <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 shadow-xl shadow-blue-500/20">
-            <img src={LOGO_PATH} alt="VEDIK Logo" className="h-10 w-10 object-contain" />
+            <Image src={LOGO_PATH} alt="VEDIK Logo" width={40} height={40} className="h-10 w-10 object-contain" />
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight">VEDIK School ERP Demo</h1>
           <p className="text-sm text-slate-400">

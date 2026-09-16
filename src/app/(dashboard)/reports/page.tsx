@@ -2,10 +2,9 @@
 
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabPanel } from "@/components/ui/tabs";
-import { BarChart3, Users, DollarSign, BookOpen, FileText, Download, Calendar } from "lucide-react";
+import { Users, DollarSign, BookOpen, Download, Calendar } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 
 const reportTabs = [

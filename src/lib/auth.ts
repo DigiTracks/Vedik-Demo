@@ -1,5 +1,6 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
 import { Role, User } from "@/types";
 
 const AUTH_KEY = "vedik_auth";
@@ -55,6 +56,43 @@ export const DEMO_PROFILES: Record<Role, DemoProfile> = {
 
 export const DEFAULT_ROLE: Role = "school_admin";
 
+const authListeners = new Set<() => void>();
+let cachedUser: User | null = null;
+
+function readUser(): User {
+  if (typeof window === "undefined") {
+    return DEMO_PROFILES[DEFAULT_ROLE];
+  }
+
+  try {
+    const data = localStorage.getItem(AUTH_KEY);
+    if (data) {
+      const parsed = JSON.parse(data);
+      if (parsed && parsed.role && DEMO_PROFILES[parsed.role as Role]) {
+        return parsed;
+      }
+    }
+  } catch {
+    localStorage.removeItem(AUTH_KEY);
+  }
+
+  return DEMO_PROFILES[DEFAULT_ROLE];
+}
+
+export function useDemoUser(): User {
+  return useSyncExternalStore(
+    (listener) => {
+      authListeners.add(listener);
+      return () => authListeners.delete(listener);
+    },
+    () => {
+      cachedUser ??= readUser();
+      return cachedUser;
+    },
+    () => DEMO_PROFILES[DEFAULT_ROLE]
+  );
+}
+
 export function getStoredUser(): User {
   if (typeof window === "undefined") {
     return DEMO_PROFILES[DEFAULT_ROLE];
@@ -74,7 +112,7 @@ export function getStoredUser(): User {
   const defaultUser = DEMO_PROFILES[DEFAULT_ROLE];
   try {
     localStorage.setItem(AUTH_KEY, JSON.stringify(defaultUser));
-  } catch (e) {}
+  } catch {}
   return defaultUser;
 }
 
@@ -89,7 +127,8 @@ export function switchDemoRole(role: Role): User {
   
   if (typeof window !== "undefined") {
     localStorage.setItem(AUTH_KEY, JSON.stringify(user));
-    window.dispatchEvent(new CustomEvent("vedik_role_changed", { detail: user }));
+    cachedUser = user;
+    authListeners.forEach((listener) => listener());
   }
   
   return user;
@@ -105,7 +144,8 @@ export function loginUser(email: string, password: string, role: Role): User {
   };
   if (typeof window !== "undefined") {
     localStorage.setItem(AUTH_KEY, JSON.stringify(user));
-    window.dispatchEvent(new CustomEvent("vedik_role_changed", { detail: user }));
+    cachedUser = user;
+    authListeners.forEach((listener) => listener());
   }
   return user;
 }

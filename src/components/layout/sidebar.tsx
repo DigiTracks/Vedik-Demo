@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn, LOGO_PATH } from "@/lib/utils";
-import { getStoredUser, DEMO_PROFILES } from "@/lib/auth";
-import type { Role, User as UserType } from "@/types";
+import { useDemoUser, DEMO_PROFILES } from "@/lib/auth";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import type { Role } from "@/types";
 import {
   LayoutDashboard,
   Users,
@@ -30,7 +32,6 @@ import {
   Briefcase,
   UserCheck,
   Shield,
-  Calendar,
 } from "lucide-react";
 
 interface NavItem {
@@ -99,34 +100,9 @@ interface SidebarProps {
 
 export function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const pathname = usePathname();
-  const [currentUser, setCurrentUser] = useState<UserType>(() => getStoredUser());
+  const currentUser = useDemoUser();
   const [expandedItems, setExpandedItems] = useState<string[]>(["Academics", "Examinations"]);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    setCurrentUser(getStoredUser());
-    const handleRoleChanged = (e: Event) => {
-      const customEvent = e as CustomEvent<UserType>;
-      if (customEvent.detail) {
-        setCurrentUser(customEvent.detail);
-      } else {
-        setCurrentUser(getStoredUser());
-      }
-    };
-
-    window.addEventListener("vedik_role_changed", handleRoleChanged);
-    window.addEventListener("storage", handleRoleChanged);
-
-    const check = () => setIsMobile(window.innerWidth < 1024);
-    check();
-    window.addEventListener("resize", check);
-
-    return () => {
-      window.removeEventListener("vedik_role_changed", handleRoleChanged);
-      window.removeEventListener("storage", handleRoleChanged);
-      window.removeEventListener("resize", check);
-    };
-  }, []);
+  const isMobile = useMediaQuery("(max-width: 1023px)");
 
   const toggleExpand = (label: string) => {
     setExpandedItems((prev) =>
@@ -171,7 +147,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
           {!isCollapsed && (
             <div className="flex items-center gap-3 min-w-0">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 shadow-md shadow-blue-500/20 shrink-0">
-                <img src={LOGO_PATH} alt="VEDIK Logo" className="h-6 w-6 object-contain" />
+                <Image src={LOGO_PATH} alt="VEDIK Logo" width={24} height={24} className="h-6 w-6 object-contain" />
               </div>
               <div className="flex flex-col min-w-0">
                 <span className="text-base font-black tracking-wider bg-gradient-to-r from-white via-slate-200 to-blue-200 bg-clip-text text-transparent leading-none">

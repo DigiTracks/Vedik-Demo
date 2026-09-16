@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { students, teachers, transactions, fees, attendanceData, classes, homework, messages, exams, marks } from "@/lib/mock-data";
+import { students, transactions, fees, attendanceData, homework } from "@/lib/mock-data";
 import { formatCurrency, cn } from "@/lib/utils";
-import { getStoredUser, DEMO_PROFILES } from "@/lib/auth";
-import type { Role, User as UserType } from "@/types";
+import { useDemoUser, DEMO_PROFILES } from "@/lib/auth";
+import type { Role } from "@/types";
 import {
   GraduationCap,
   Users,
@@ -16,24 +16,15 @@ import {
   TrendingUp,
   ArrowUpRight,
   Calendar,
-  BookOpen,
-  Bus,
   Clock,
-  Download,
-  RefreshCw,
   CheckCircle2,
   Sparkles,
-  Shield,
   FileCheck,
   Award,
-  ChevronRight,
   Flame,
   Send,
   UserCheck,
   CreditCard,
-  Bell,
-  Activity,
-  Layers,
   FileText,
   UserPlus,
   Receipt,
@@ -91,43 +82,13 @@ const studentMarksData = [
 ];
 
 export default function DashboardPage() {
-  const [currentUser, setCurrentUser] = useState<UserType>(() => getStoredUser());
+  const currentUser = useDemoUser();
   const [selectedPeriod, setSelectedPeriod] = useState("monthly");
   const [markedAttendance, setMarkedAttendance] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
-  useEffect(() => {
-    setCurrentUser(getStoredUser());
-    const handleRoleChanged = (e: Event) => {
-      const customEvent = e as CustomEvent<UserType>;
-      if (customEvent.detail) {
-        setCurrentUser(customEvent.detail);
-      } else {
-        setCurrentUser(getStoredUser());
-      }
-    };
-    window.addEventListener("vedik_role_changed", handleRoleChanged);
-    window.addEventListener("storage", handleRoleChanged);
-
-    return () => {
-      window.removeEventListener("vedik_role_changed", handleRoleChanged);
-      window.removeEventListener("storage", handleRoleChanged);
-    };
-  }, []);
-
-  const handleRefresh = () => {
-    setIsRefreshing(true);
-    setTimeout(() => {
-      setIsRefreshing(false);
-    }, 500);
-  };
 
   const currentRole = (currentUser?.role === "master_admin" ? "school_admin" : currentUser?.role) || "school_admin";
   const activeProfile = DEMO_PROFILES[currentUser?.role as Role] || DEMO_PROFILES.school_admin;
 
-  // Aggregate stats
-  const totalStudents = students.length;
-  const totalTeachers = teachers.length;
   const totalRevenue = transactions.filter((t) => t.type === "Income").reduce((sum, t) => sum + t.amount, 0);
   const pendingFees = fees.filter((f) => f.status === "Pending" || f.status === "Overdue").reduce((sum, f) => sum + (f.amount - f.paidAmount), 0);
   const presentToday = attendanceData.filter((a) => a.status === "Present").length;
@@ -538,7 +499,7 @@ export default function DashboardPage() {
               <CardContent className="p-5">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-[11px] font-bold uppercase text-slate-400 dark:text-gray-400">Today's Class Attendance</p>
+                    <p className="text-[11px] font-bold uppercase text-slate-400 dark:text-gray-400">Class Attendance Today</p>
                     <p className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400">33 / 35</p>
                     <p className="text-xs text-slate-400 mt-1">94.3% Present (2 Absent)</p>
                   </div>
@@ -588,7 +549,7 @@ export default function DashboardPage() {
             <Card className="lg:col-span-2 rounded-2xl border-slate-200/90 bg-white/95 dark:border-gray-800 dark:bg-gray-900/90 shadow-sm">
               <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-slate-100 dark:border-gray-800">
                 <div>
-                  <CardTitle className="text-base font-bold text-slate-900 dark:text-white">Today's Teaching Schedule</CardTitle>
+                  <CardTitle className="text-base font-bold text-slate-900 dark:text-white">Teaching Schedule for Today</CardTitle>
                   <p className="text-xs text-slate-500 dark:text-gray-400">Mrs. Priya Sharma • Mathematics Faculty</p>
                 </div>
                 <Badge variant="outline" className="bg-blue-50 text-blue-700 dark:bg-blue-900/40">Today: Monday</Badge>
@@ -640,7 +601,7 @@ export default function DashboardPage() {
                   <Flame className="h-8 w-8 text-amber-500 mx-auto" />
                   <p className="text-xs font-bold text-slate-800 dark:text-white">Class 10-A Attendance Status</p>
                   <p className="text-[11px] text-slate-500 dark:text-gray-400">
-                    {markedAttendance ? "✅ Attendance recorded successfully (33 Present, 2 Absent)." : "Ready to mark today's roll call for 35 registered students."}
+                    {markedAttendance ? "✅ Attendance recorded successfully (33 Present, 2 Absent)." : "Ready to mark Today's roll call for 35 registered students."}
                   </p>
                 </div>
 
@@ -778,7 +739,7 @@ export default function DashboardPage() {
             {/* Today's Classes for Student */}
             <Card className="rounded-2xl border-slate-200/90 bg-white/95 dark:border-gray-800 dark:bg-gray-900/90 shadow-sm">
               <CardHeader className="pb-2 border-b border-slate-100 dark:border-gray-800">
-                <CardTitle className="text-base font-bold text-slate-900 dark:text-white">Today's Class Timetable</CardTitle>
+                <CardTitle className="text-base font-bold text-slate-900 dark:text-white">Class Timetable for Today</CardTitle>
                 <p className="text-xs text-slate-500 dark:text-gray-400">Class 10 - Section A</p>
               </CardHeader>
               <CardContent className="pt-3 space-y-3">
@@ -806,3 +767,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabPanel } from "@/components/ui/tabs";
 import { schoolSettings } from "@/lib/mock-data";
-import { Settings, School, Bell, Palette, Save } from "lucide-react";
+import { School, Bell, Palette, Save } from "lucide-react";
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("school");

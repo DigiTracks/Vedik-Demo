@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/modal";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Search, Shield, Edit, Trash2, UserPlus } from "lucide-react";
+import { Search, Edit, Trash2, UserPlus } from "lucide-react";
 import type { Role } from "@/types";
 
 const users = [

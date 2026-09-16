@@ -5,8 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { attendanceData, students } from "@/lib/mock-data";
-import { Calendar, Check, X, Clock, Download } from "lucide-react";
+import { attendanceData } from "@/lib/mock-data";
+import { Calendar, Check, X, Clock, Download, Hourglass } from "lucide-react";
 
 export default function AttendancePage() {
   const [selectedDate, setSelectedDate] = useState("2026-07-25");
@@ -38,7 +38,7 @@ export default function AttendancePage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-6">
         <Card>
           <CardContent className="p-4 text-center">
             <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-blue-100">
@@ -73,6 +73,15 @@ export default function AttendancePage() {
             </div>
             <p className="text-2xl font-bold text-yellow-600">{lateCount}</p>
             <p className="text-xs text-gray-500">Late</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 text-center">
+            <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-orange-100">
+              <Hourglass className="h-5 w-5 text-orange-600" />
+            </div>
+            <p className="text-2xl font-bold text-orange-600">{halfDayCount}</p>
+            <p className="text-xs text-gray-500">Half Day</p>
           </CardContent>
         </Card>
         <Card>

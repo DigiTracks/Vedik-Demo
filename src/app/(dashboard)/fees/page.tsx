@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Image from "next/image";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -261,7 +262,7 @@ export default function FeesPage() {
         </div>
         <div ref={receiptRef} className="rounded-xl border-2 border-gray-900 bg-white text-gray-900">
           <div className="border-b-2 border-gray-900 p-6 text-center">
-            <img src={LOGO_PATH} alt="VEDIK Logo" className="mx-auto mb-2 h-14 w-14 object-contain" />
+            <Image src={LOGO_PATH} alt="VEDIK Logo" width={56} height={56} className="mx-auto mb-2 h-14 w-14 object-contain" />
             <h2 className="text-xl font-bold tracking-wide">{schoolSettings.name.toUpperCase()}</h2>
             <p className="text-xs text-gray-500 mt-1">{schoolSettings.address}</p>
             <p className="text-xs text-gray-500">{schoolSettings.phone} | {schoolSettings.email}</p>

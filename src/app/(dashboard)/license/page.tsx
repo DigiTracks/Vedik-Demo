@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/modal";
 import { Tabs, TabPanel } from "@/components/ui/tabs";
-import { CheckCircle, X, Shield, Zap, Crown, Star, Mail, Phone, Building, MessageSquare, Send } from "lucide-react";
+import { CheckCircle, X, Shield, Zap, Crown, Star, Mail, Send } from "lucide-react";
 
 const tiers = [
   {
@@ -275,17 +274,10 @@ export default function LicensePage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {[
-                    { mod: "Dashboard, Students, Teachers", t: true, l: true, e: true, p: true, en: true },
-                    { mod: "Attendance, Fees, Staff, Academics", t: true, l: true, e: true, p: true, en: true },
-                    { mod: "Exams, Homework, Reports", t: false, l: true, e: true, p: true, en: true },
-                    { mod: "Communication, Certificates", t: false, l: false, e: true, p: true, en: true },
-                    { mod: "Finance, Library, Transport", t: false, l: false, e: false, p: true, en: true },
-                    { mod: "Hostel, Inventory", t: false, l: false, e: false, p: false, en: true },
-                  ].map((row, i) => (
+                  {moduleMatrix.map((row, i) => (
                     <tr key={i} className="border-b border-gray-100 dark:border-gray-800">
-                      <td className="p-4 font-medium">{row.mod}</td>
-                      {[row.t, row.l, row.e, row.p, row.en].map((included, j) => (
+                      <td className="p-4 font-medium">{row.module}</td>
+                      {[row.trial, row.lite, row.essential, row.pro, row.enterprise].map((included, j) => (
                         <td key={j} className="p-4 text-center">
                           {included ? (
                             <CheckCircle className="mx-auto h-5 w-5 text-green-500" />

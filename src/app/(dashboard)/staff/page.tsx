@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { staff } from "@/lib/mock-data";
 import { formatCurrency } from "@/lib/utils";
-import { Plus, Search, Edit, Trash2, Mail, Phone } from "lucide-react";
+import { Plus, Search, Edit, Trash2 } from "lucide-react";
 
 export default function StaffPage() {
   const [searchQuery, setSearchQuery] = useState("");

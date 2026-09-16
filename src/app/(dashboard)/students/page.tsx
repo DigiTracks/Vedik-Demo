@@ -9,7 +9,7 @@ import { Modal } from "@/components/ui/modal";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { students, schoolSettings } from "@/lib/mock-data";
 import { BASE_PATH } from "@/lib/utils";
-import { Plus, Search, Eye, Edit, Trash2, Printer, Download, X, Save, UserPlus } from "lucide-react";
+import { Search, Eye, Edit, Trash2, Printer, Download, Save, UserPlus } from "lucide-react";
 
 type Student = typeof students[0];
 

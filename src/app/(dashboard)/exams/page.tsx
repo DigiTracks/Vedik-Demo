@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Modal } from "@/components/ui/modal";
 import { exams } from "@/lib/mock-data";
-import { Plus, Calendar, Edit, Trash2 } from "lucide-react";
+import { Plus, Edit, Trash2 } from "lucide-react";
 
 export default function ExamsPage() {
   const [showModal, setShowModal] = useState(false);

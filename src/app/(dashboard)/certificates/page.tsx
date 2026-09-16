@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { certificates } from "@/lib/mock-data";
@@ -152,7 +152,7 @@ export default function CertificatesPage() {
               </Button>
             </div>
             <div className="rounded-xl border-2 border-double border-gray-800 bg-gradient-to-br from-white to-gray-50 p-8 text-center">
-            <img src={LOGO_PATH} alt="VEDIK Logo" className="mx-auto mb-2 h-16 w-16 object-contain" />
+            <Image src={LOGO_PATH} alt="VEDIK Logo" width={64} height={64} className="mx-auto mb-2 h-16 w-16 object-contain" />
             <div className="mb-4 text-2xl font-bold text-blue-600">VEDIK School</div>
             <div className="mx-auto mb-6 h-0.5 w-32 bg-gradient-to-r from-blue-500 to-indigo-500" />
             <h2 className="mb-4 text-xl font-bold uppercase tracking-wider text-gray-800">

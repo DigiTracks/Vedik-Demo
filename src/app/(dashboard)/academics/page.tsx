@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { classes, subjects } from "@/lib/mock-data";
 import { BookOpen, Layers, Tag, Clock, ArrowRight } from "lucide-react";
 

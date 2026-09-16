@@ -2,11 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { getStoredUser, switchDemoRole, DEMO_PROFILES, logoutUser } from "@/lib/auth";
-import { Avatar } from "@/components/ui/avatar";
-import type { Role, User as UserType } from "@/types";
+import { useDemoUser, switchDemoRole, DEMO_PROFILES } from "@/lib/auth";
+import type { Role } from "@/types";
 import {
   Search,
   Bell,
@@ -26,44 +24,19 @@ interface TopNavProps {
 }
 
 export function TopNav({ onMenuToggle }: TopNavProps) {
-  const pathname = usePathname();
-  const [currentUser, setCurrentUser] = useState<UserType>(() => getStoredUser());
+  const currentUser = useDemoUser();
   const [darkMode, setDarkMode] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    // Sync initial state
-    setCurrentUser(getStoredUser());
-
-    // Listen for role changes across the app
-    const handleRoleChanged = (e: Event) => {
-      const customEvent = e as CustomEvent<UserType>;
-      if (customEvent.detail) {
-        setCurrentUser(customEvent.detail);
-      } else {
-        setCurrentUser(getStoredUser());
-      }
-    };
-
-    window.addEventListener("vedik_role_changed", handleRoleChanged);
-    window.addEventListener("storage", handleRoleChanged);
-
-    // Dark mode init
-    const saved = localStorage.getItem("vedik_dark_mode");
-    const isDark = saved === "true";
-    setDarkMode(isDark);
+    const isDark = localStorage.getItem("vedik_dark_mode") === "true";
     if (isDark) {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
-
-    return () => {
-      window.removeEventListener("vedik_role_changed", handleRoleChanged);
-      window.removeEventListener("storage", handleRoleChanged);
-    };
   }, []);
 
   const toggleDarkMode = () => {
@@ -78,8 +51,7 @@ export function TopNav({ onMenuToggle }: TopNavProps) {
   };
 
   const handleRoleSelect = (role: Role) => {
-    const updated = switchDemoRole(role);
-    setCurrentUser(updated);
+    switchDemoRole(role);
   };
 
   const rolesList: { role: Role; label: string; icon: React.ReactNode; color: string }[] = [

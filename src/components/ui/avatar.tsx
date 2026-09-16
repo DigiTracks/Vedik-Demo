@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface AvatarProps {
@@ -27,7 +28,7 @@ function Avatar({ src, alt, fallback, size = "md", className }: AvatarProps) {
       )}
     >
       {src ? (
-        <img src={src} alt={alt || fallback} className="h-full w-full object-cover" />
+        <Image src={src} alt={alt || fallback} fill sizes="48px" className="object-cover" />
       ) : (
         <div className="flex h-full w-full items-center justify-center rounded-full bg-blue-100 text-blue-700 font-medium dark:bg-blue-900 dark:text-blue-300">
           {fallback}
