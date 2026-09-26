@@ -1,99 +1,80 @@
-"use client";
+import type { Metadata } from "next";
+import PageClient from "./page-client";
+import { breadcrumbSchema, buildMetadata, faqSchema } from "@/lib/site";
+import { JsonLd } from "@/components/seo/json-ld";
+import { ModuleExplainer } from "@/components/seo/module-explainer";
 
-import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { hostels } from "@/lib/mock-data";
-import { Plus, Home, Users, BedDouble } from "lucide-react";
+export const metadata: Metadata = buildMetadata("hostel");
 
-export default function HostelPage() {
-  const totalRooms = hostels.reduce((sum, h) => sum + h.totalRooms, 0);
-  const occupiedRooms = hostels.reduce((sum, h) => sum + h.occupiedRooms, 0);
-  const totalCapacity = hostels.reduce((sum, h) => sum + h.capacity, 0);
+const FAQS = [
+  {
+    question: "Should boys and girls hostels be separate blocks?",
+    answer:
+      "In most Indian schools, yes, and VEDIK records the hostel type on each block so the split is explicit. The demo school runs two boys hostels and one girls hostel. Recording the type on the block rather than inferring it from occupants keeps the allocation unambiguous when a block is part-filled.",
+  },
+  {
+    question: "How is occupancy percentage calculated?",
+    answer:
+      "Occupancy is the ratio of occupied rooms to total rooms on that block. VEDIK shows it alongside the separate bed capacity, because a block can be 80% full by rooms while still having spare beds, depending on how many students share each room.",
+  },
+  {
+    question: "Who is a warden responsible for?",
+    answer:
+      "The warden is the member of staff accountable for a hostel block, covering roll call, maintenance requests and the welfare of the residents. VEDIK attaches one warden per block so escalation is unambiguous when a student or parent calls after hours.",
+  },
+];
 
+export default function Page() {
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Hostel</h1>
-          <p className="text-gray-500 dark:text-gray-400">Manage hostel accommodations</p>
-        </div>
-        <Button><Plus className="h-4 w-4" /> Add Hostel</Button>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3">
-              <div className="rounded-xl bg-blue-100 p-3"><Home className="h-6 w-6 text-blue-600" /></div>
-              <div>
-                <p className="text-sm text-gray-500">Total Hostels</p>
-                <p className="text-2xl font-bold">{hostels.length}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3">
-              <div className="rounded-xl bg-green-100 p-3"><BedDouble className="h-6 w-6 text-green-600" /></div>
-              <div>
-                <p className="text-sm text-gray-500">Rooms Occupied</p>
-                <p className="text-2xl font-bold">{occupiedRooms}/{totalRooms}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3">
-              <div className="rounded-xl bg-purple-100 p-3"><Users className="h-6 w-6 text-purple-600" /></div>
-              <div>
-                <p className="text-sm text-gray-500">Total Capacity</p>
-                <p className="text-2xl font-bold">{totalCapacity}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {hostels.map((h) => (
-          <Card key={h.id} className="hover:shadow-md transition-shadow">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{h.name}</h3>
-                  <Badge variant={h.type === "Boys" ? "info" : "success"} className="mt-1">{h.type}</Badge>
-                </div>
-                <Badge variant={h.occupancy > 85 ? "danger" : h.occupancy > 70 ? "warning" : "success"}>
-                  {h.occupancy}% Full
-                </Badge>
-              </div>
-              <div className="mt-4 space-y-3">
-                <div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Rooms</span>
-                    <span>{h.occupiedRooms}/{h.totalRooms}</span>
-                  </div>
-                  <div className="mt-1 h-2 w-full rounded-full bg-gray-200">
-                    <div className="h-2 rounded-full bg-blue-500" style={{ width: `${(h.occupiedRooms / h.totalRooms) * 100}%` }} />
-                  </div>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Warden</span>
-                  <span className="font-medium">{h.warden}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Capacity</span>
-                  <span>{h.capacity} students</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
+    <>
+      <JsonLd data={breadcrumbSchema("hostel")} />
+      <JsonLd data={faqSchema(FAQS)} />
+      <PageClient />
+      <ModuleExplainer
+        intro="For schools that run residential accommodation, the hostel is a separate operation with its own capacity, staffing and safety obligations. VEDIK keeps it as its own module rather than folding beds into the classroom view, so wardens and occupancy are tracked on the same system as everything else."
+        sections={[
+          {
+            heading: "What VEDIK tracks per hostel block",
+            paragraphs: [
+              "Each block records its name, whether it is a boys or girls hostel, the total room count, how many of those rooms are currently occupied, the named warden, and the bed capacity. Occupancy is shown as a percentage with a colour band, so a block approaching full capacity is obvious without opening a spreadsheet.",
+              "Keeping the warden on the block record matters more than it looks. When a parent calls at seven in the evening about a student, the question the office has to answer is always the same one, and VEDIK has it on screen rather than in someone's memory.",
+            ],
+            points: [
+              "Block name and boys/girls type",
+              "Total and occupied room counts",
+              "Bed capacity per block",
+              "Occupancy percentage with thresholds",
+              "Named warden per block",
+              "Aggregate totals across all blocks",
+            ],
+          },
+          {
+            heading: "Planning capacity across an academic year",
+            paragraphs: [
+              "Hostel demand is seasonal. Admissions for the coming year decide how many beds are needed, and a block that is 84% full with two weeks to admissions is a planning signal, not a crisis. Watching occupancy per block across the year is how a school decides whether to open another block or lease accommodation nearby.",
+              "The demo data shows three blocks at 80%, 84% and 75% occupancy, which is a realistic spread for a school that has grown steadily and is now close to needing additional capacity.",
+            ],
+          },
+        ]}
+        faqs={FAQS}
+        related={[
+          {
+            href: "/students",
+            label: "Students",
+            description: "The register hostelled students are drawn from.",
+          },
+          {
+            href: "/inventory",
+            label: "Inventory",
+            description: "Track hostel furniture and supplies.",
+          },
+          {
+            href: "/staff",
+            label: "Staff",
+            description: "Manage the warden and support staff records.",
+          },
+        ]}
+      />
+    </>
   );
 }

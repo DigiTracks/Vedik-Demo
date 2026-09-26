@@ -15,15 +15,3 @@ export function formatCurrency(amount: number): string {
     minimumFractionDigits: 0,
   }).format(amount);
 }
-
-export function formatDate(date: string): string {
-  return new Date(date).toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-}
-
-export function generateId(): string {
-  return Math.random().toString(36).substring(2, 15);
-}

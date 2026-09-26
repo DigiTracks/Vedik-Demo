@@ -93,29 +93,6 @@ export function useDemoUser(): User {
   );
 }
 
-export function getStoredUser(): User {
-  if (typeof window === "undefined") {
-    return DEMO_PROFILES[DEFAULT_ROLE];
-  }
-  try {
-    const data = localStorage.getItem(AUTH_KEY);
-    if (data) {
-      const parsed = JSON.parse(data);
-      if (parsed && parsed.role && DEMO_PROFILES[parsed.role as Role]) {
-        return parsed;
-      }
-    }
-  } catch (e) {
-    console.error("Error reading auth state", e);
-  }
-  // Default to School Admin demo profile
-  const defaultUser = DEMO_PROFILES[DEFAULT_ROLE];
-  try {
-    localStorage.setItem(AUTH_KEY, JSON.stringify(defaultUser));
-  } catch {}
-  return defaultUser;
-}
-
 export function switchDemoRole(role: Role): User {
   const profile = DEMO_PROFILES[role] || DEMO_PROFILES[DEFAULT_ROLE];
   const user: User = {
@@ -124,37 +101,17 @@ export function switchDemoRole(role: Role): User {
     email: profile.email,
     role: profile.role,
   };
-  
+
   if (typeof window !== "undefined") {
     localStorage.setItem(AUTH_KEY, JSON.stringify(user));
     cachedUser = user;
     authListeners.forEach((listener) => listener());
   }
-  
+
   return user;
 }
 
-export function loginUser(email: string, password: string, role: Role): User {
-  const profile = DEMO_PROFILES[role] || DEMO_PROFILES[DEFAULT_ROLE];
-  const user: User = {
-    id: profile.id,
-    name: profile.name,
-    email: email || profile.email,
-    role,
-  };
-  if (typeof window !== "undefined") {
-    localStorage.setItem(AUTH_KEY, JSON.stringify(user));
-    cachedUser = user;
-    authListeners.forEach((listener) => listener());
-  }
-  return user;
-}
-
-export function logoutUser(): void {
-  // In demo mode, reset back to Admin profile
-  switchDemoRole("school_admin");
-}
-
-export function isLoggedIn(): boolean {
-  return true;
+/** Reset the demo back to the default persona. */
+export function logoutUser(): User {
+  return switchDemoRole(DEFAULT_ROLE);
 }

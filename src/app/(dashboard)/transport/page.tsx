@@ -1,109 +1,80 @@
-"use client";
+import type { Metadata } from "next";
+import PageClient from "./page-client";
+import { breadcrumbSchema, buildMetadata, faqSchema } from "@/lib/site";
+import { JsonLd } from "@/components/seo/json-ld";
+import { ModuleExplainer } from "@/components/seo/module-explainer";
 
-import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { transport } from "@/lib/mock-data";
-import { Plus, Bus, Users, AlertTriangle } from "lucide-react";
+export const metadata: Metadata = buildMetadata("transport");
 
-export default function TransportPage() {
-  const activeVehicles = transport.filter((t) => t.status === "Active").length;
-  const totalCapacity = transport.reduce((sum, t) => sum + t.capacity, 0);
-  const totalAssigned = transport.reduce((sum, t) => sum + t.assignedStudents, 0);
+const FAQS = [
+  {
+    question: "How is vehicle load calculated?",
+    answer:
+      "Assigned students are compared against the vehicle's rated capacity, and VEDIK shows that as both a count and a proportion bar. A vehicle running near its rated capacity is a planning signal, because it leaves no room for a substitution or a temporary enrolment.",
+  },
+  {
+    question: "Why does a vehicle status matter for capacity?",
+    answer:
+      "A vehicle under maintenance still counts towards total fleet capacity but is not available to run, so its students need reallocating. VEDIK keeps status on the vehicle record so an unavailable bus is visible in the same view as the load figures rather than in a separate maintenance log.",
+  },
+  {
+    question: "Does VEDIK track bus routes and stops?",
+    answer:
+      "Yes. Each vehicle is assigned to a named route, and the full product models routes with their individual stops and student allocations. The demo shows the route name per vehicle, which is what most schools need to answer a parent's question at pickup.",
+  },
+];
 
+export default function Page() {
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Transport</h1>
-          <p className="text-gray-500 dark:text-gray-400">Manage school transport fleet</p>
-        </div>
-        <Button><Plus className="h-4 w-4" /> Add Vehicle</Button>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3">
-              <div className="rounded-xl bg-blue-100 p-3"><Bus className="h-6 w-6 text-blue-600" /></div>
-              <div>
-                <p className="text-sm text-gray-500">Active Vehicles</p>
-                <p className="text-2xl font-bold">{activeVehicles}/{transport.length}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3">
-              <div className="rounded-xl bg-green-100 p-3"><Users className="h-6 w-6 text-green-600" /></div>
-              <div>
-                <p className="text-sm text-gray-500">Students Assigned</p>
-                <p className="text-2xl font-bold">{totalAssigned}/{totalCapacity}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3">
-              <div className="rounded-xl bg-yellow-100 p-3"><AlertTriangle className="h-6 w-6 text-yellow-600" /></div>
-              <div>
-                <p className="text-sm text-gray-500">Under Maintenance</p>
-                <p className="text-2xl font-bold text-yellow-600">{transport.filter((t) => t.status === "Maintenance").length}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Vehicle</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Route</TableHead>
-                <TableHead>Driver</TableHead>
-                <TableHead>Capacity</TableHead>
-                <TableHead>Assigned</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {transport.map((t) => (
-                <TableRow key={t.id}>
-                  <TableCell className="font-medium">{t.vehicleNumber}</TableCell>
-                  <TableCell><Badge variant="outline">{t.type}</Badge></TableCell>
-                  <TableCell>{t.route}</TableCell>
-                  <TableCell>{t.driver}</TableCell>
-                  <TableCell>{t.capacity}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <div className="h-2 w-20 rounded-full bg-gray-200">
-                        <div className="h-2 rounded-full bg-blue-500" style={{ width: `${(t.assignedStudents / t.capacity) * 100}%` }} />
-                      </div>
-                      <span className="text-sm">{t.assignedStudents}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={t.status === "Active" ? "success" : t.status === "Maintenance" ? "warning" : "outline"}>
-                      {t.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Button variant="ghost" size="sm">View Route</Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-    </div>
+    <>
+      <JsonLd data={breadcrumbSchema("transport")} />
+      <JsonLd data={faqSchema(FAQS)} />
+      <PageClient />
+      <ModuleExplainer
+        intro="School transport is a capacity-planning problem before it is a vehicle-management problem. The number that matters is not how many buses you own, it is how many students each bus is carrying against what it is legally and safely rated for. VEDIK surfaces both on the same screen."
+        sections={[
+          {
+            heading: "What VEDIK tracks per vehicle",
+            paragraphs: [
+              "Each vehicle record carries its registration number, type, assigned route, named driver, rated capacity, how many students are currently allocated to it, and its operational status. The load figure is shown as a count against capacity with a proportion bar, so an over-loaded bus is visible at a glance.",
+              "Status matters as much as capacity here. A vehicle under maintenance still counts towards fleet capacity but is not available to run, so its students need reallocating. Keeping status on the same record as the load figures means an unavailable bus is visible where the planning happens, not buried in a maintenance log.",
+            ],
+            points: [
+              "Registration number and vehicle type",
+              "Assigned route and driver",
+              "Rated capacity per vehicle",
+              "Student allocation with load bar",
+              "Active or maintenance status",
+              "Fleet-wide totals across all vehicles",
+            ],
+          },
+          {
+            heading: "Planning a route change",
+            paragraphs: [
+              "When a route changes, the first question is whether the remaining vehicles on that route can absorb the displaced students. VEDIK's per-vehicle load figures answer that directly, because a route running at 90% on one bus and 40% on another has a very different answer from one running at 90% on both.",
+              "The demo fleet shows five vehicles across four routes plus a local drop, with one under maintenance. That maintenance entry is deliberately visible in the load summary, since a bus off the road is a capacity problem before it is a mechanical one.",
+            ],
+          },
+        ]}
+        faqs={FAQS}
+        related={[
+          {
+            href: "/students",
+            label: "Students",
+            description: "See which students are allocated to a route.",
+          },
+          {
+            href: "/staff",
+            label: "Staff",
+              description: "Driver records live alongside other staff.",
+          },
+          {
+            href: "/hostel",
+            label: "Hostel",
+            description: "The other residential facility module.",
+          },
+        ]}
+      />
+    </>
   );
 }

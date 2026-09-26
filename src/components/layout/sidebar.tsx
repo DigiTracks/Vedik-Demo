@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn, LOGO_PATH } from "@/lib/utils";
+import { SITE } from "@/lib/site";
 import { useDemoUser, DEMO_PROFILES } from "@/lib/auth";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import type { Role } from "@/types";
@@ -63,10 +64,7 @@ const allNavItems: NavItem[] = [
     label: "Examinations",
     href: "/exams",
     icon: <FileText className="h-4.5 w-4.5" />,
-    children: [
-      { label: "Exams", href: "/exams" },
-      { label: "Marks & Grades", href: "/marks" },
-    ],
+    children: [{ label: "Marks & Grades", href: "/marks" }],
   },
   {
     label: "Finance",
@@ -74,7 +72,6 @@ const allNavItems: NavItem[] = [
     icon: <DollarSign className="h-4.5 w-4.5" />,
     roles: ["master_admin", "school_admin", "student"],
     children: [
-      { label: "Fee Management", href: "/fees" },
       { label: "Income & Expense", href: "/finance" },
       { label: "Staff Payroll", href: "/payroll" },
     ],
@@ -161,6 +158,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
           )}
           <button
             onClick={onToggle}
+            aria-label={isCollapsed ? "Expand navigation" : "Collapse navigation"}
             className="rounded-xl p-2 text-slate-400 hover:bg-slate-800 hover:text-white shrink-0 transition-colors"
           >
             {isCollapsed ? <Menu className="h-5 w-5" /> : <X className="h-5 w-5" />}
@@ -184,7 +182,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
         )}
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto px-3 py-3 scrollbar-hide">
+        <nav aria-label="Main" className="flex-1 overflow-y-auto px-3 py-3 scrollbar-hide">
           <ul className="space-y-1">
             {filteredNavItems.map((item) => {
               const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
@@ -221,6 +219,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
                                 <Link
                                   href={child.href}
                                   onClick={handleNavClick}
+                                  aria-current={isChildActive ? "page" : undefined}
                                   className={cn(
                                     "block rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors",
                                     isChildActive
@@ -240,6 +239,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
                     <Link
                       href={item.href}
                       onClick={handleNavClick}
+                      aria-current={isActive ? "page" : undefined}
                       className={cn(
                         "flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-semibold transition-all duration-150",
                         isActive
@@ -261,7 +261,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
         <div className="border-t border-slate-800/80 p-3.5">
           {!isCollapsed ? (
             <div className="flex items-center justify-between text-[11px] text-slate-400">
-              <span className="font-semibold text-slate-300">VEDIK Cloud v2.5</span>
+              <span className="font-semibold text-slate-300">VEDIK Cloud v{SITE.version}</span>
               <span className="flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-950/50 px-1.5 py-0.5 rounded border border-emerald-800/50">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 Online

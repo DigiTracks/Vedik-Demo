@@ -27,7 +27,7 @@ export const schoolSettings: SchoolSettings = {
   phone: "+91 98765 43210",
   email: "admin@vedikschool.edu.in",
   website: "www.vedikschool.edu.in",
-  academicYear: "2026-2026",
+  academicYear: "2026-2027",
   timezone: "Asia/Kolkata",
 };
 

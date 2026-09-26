@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { useDemoUser, switchDemoRole, DEMO_PROFILES } from "@/lib/auth";
+import { useDemoUser, switchDemoRole, logoutUser, DEMO_PROFILES } from "@/lib/auth";
 import type { Role } from "@/types";
 import {
   Search,
@@ -17,6 +17,8 @@ import {
   Sparkles,
   BookOpen,
   CheckCircle2,
+  Home,
+  LogOut,
 } from "lucide-react";
 
 interface TopNavProps {
@@ -118,8 +120,12 @@ export function TopNav({ onMenuToggle }: TopNavProps) {
         {/* Search */}
         <div className="relative hidden md:block">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-gray-500" />
+          <label htmlFor="global-search" className="sr-only">
+            Search students, classes and modules
+          </label>
           <input
-            type="text"
+            id="global-search"
+            type="search"
             placeholder="Search students, classes, modules..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -130,8 +136,9 @@ export function TopNav({ onMenuToggle }: TopNavProps) {
         {/* Dark mode toggle */}
         <button
           onClick={toggleDarkMode}
+          aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+          aria-pressed={darkMode}
           className="rounded-xl p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-800 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200 transition-colors"
-          title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
         >
           {darkMode ? <Sun className="h-4.5 w-4.5 text-amber-400" /> : <Moon className="h-4.5 w-4.5" />}
         </button>
@@ -235,6 +242,24 @@ export function TopNav({ onMenuToggle }: TopNavProps) {
                   <Shield className="h-3.5 w-3.5" />
                   School Settings
                 </Link>
+                <Link
+                  href="/"
+                  onClick={() => setShowUserMenu(false)}
+                  className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-gray-700/60 transition-colors"
+                >
+                  <Home className="h-3.5 w-3.5" />
+                  Back to marketing site
+                </Link>
+                <button
+                  onClick={() => {
+                    logoutUser();
+                    setShowUserMenu(false);
+                  }}
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-gray-700/60 transition-colors cursor-pointer"
+                >
+                  <LogOut className="h-3.5 w-3.5" />
+                  Reset demo to admin
+                </button>
               </div>
             </div>
           )}

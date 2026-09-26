@@ -1,24 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import { useSyncExternalStore } from "react";
 import { Sidebar } from "@/components/layout/sidebar";
 import { TopNav } from "@/components/layout/topnav";
 import { ToastProvider } from "@/components/ui/toast";
 import { useMediaQuery } from "@/hooks/use-media-query";
-
-const emptySubscribe = () => () => {};
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const mounted = useSyncExternalStore(
-    emptySubscribe,
-    () => true,
-    () => false
-  );
   const isMobile = useMediaQuery("(max-width: 1023px)");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -32,17 +24,6 @@ export default function DashboardLayout({
       setSidebarCollapsed((value) => !value);
     }
   };
-
-  if (!mounted) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <div className="flex flex-col items-center gap-3">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
-          <p className="text-xs font-medium text-gray-500">Loading VEDIK ERP...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <ToastProvider>

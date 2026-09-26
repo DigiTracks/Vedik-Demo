@@ -36,8 +36,10 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
 TableRow.displayName = "TableRow";
 
 const TableHead = React.forwardRef<HTMLTableCellElement, React.ThHTMLAttributes<HTMLTableCellElement>>(
-  ({ className, ...props }, ref) => (
-    <th ref={ref} className={cn("h-12 px-4 text-left align-middle font-medium text-gray-500 dark:text-gray-400 [&:has([role=checkbox])]:pr-0", className)} {...props} />
+  ({ className, scope = "col", ...props }, ref) => (
+    // `scope` defaults to "col" so screen readers announce column headers;
+    // pass scope="row" on a header cell inside the body to override it.
+    <th ref={ref} scope={scope} className={cn("h-12 px-4 text-left align-middle font-medium text-gray-500 dark:text-gray-400 [&:has([role=checkbox])]:pr-0", className)} {...props} />
   )
 );
 TableHead.displayName = "TableHead";

@@ -6,7 +6,7 @@
 
 **The complete solution for modern school management.**
 
-[Live Demo](#) | [Features](#features) | [Modules](#modules) | [Get Started](#get-started)
+[Live Demo](#) | [Features](#features) | [Modules](#modules) | [Get Started](#getting-started)
 
 </div>
 
@@ -97,6 +97,12 @@ VEDIK offers flexible plans to fit schools of all sizes.
 
 ## Getting Started
 
+> **Set `NEXT_PUBLIC_SITE_URL` before deploying.** Every canonical URL, Open
+> Graph tag, `sitemap.xml` entry and JSON-LD block is built from it. Copy
+> `.env.example` to `.env.local` for local work, and set the variable in Vercel
+> (all three environments) for production. Without it the site advertises
+> `http://localhost:3000` as its canonical origin.
+
 ### Option 1: Quick Launch (Windows)
 
 1. Double-click `START.bat`
@@ -116,9 +122,76 @@ Then open `http://localhost:3000` in your browser.
 
 ---
 
+## Deployment
+
+The app is a **fully static export** (`output: "export"` in `next.config.ts`),
+so it builds to an `out/` directory of plain HTML, CSS and JS with no server
+runtime. That means it can be hosted on Vercel, Netlify, GitHub Pages, S3 or any
+static host.
+
+```bash
+npm run build   # emits out/
+```
+
+Notes for a static host:
+
+- `trailingSlash: true`, so routes are real files: `out/classes/index.html`.
+  No rewrite rules are needed.
+- `images.unoptimized` is on because the default image optimiser needs a
+  server. Ship pre-sized images in `public/` instead.
+- Metadata route handlers (`sitemap.xml`, `robots.txt`,
+  `manifest.webmanifest`, `opengraph-image`, `twitter-image`, `icon.svg`,
+  `apple-icon.png`) are generated at build time into `out/`.
+- Every route handler needs `export const dynamic = "force-static"` — without
+  it the build fails under `output: "export"`.
+
+---
+
 ## What's Inside
 
 > All data comes pre-loaded with realistic information — 15 students, 8 teachers, 5 classes, 15 subjects, and much more — so you can see exactly how VEDIK works for your school.
+
+### Project structure
+
+```
+src/
+├── app/
+│   ├── page.tsx              Marketing landing page (server, with JSON-LD)
+│   ├── layout.tsx            Root layout: fonts + site-wide metadata
+│   ├── sitemap.ts robots.ts manifest.ts
+│   ├── opengraph-image.tsx twitter-image.tsx icon.svg apple-icon.png
+│   ├── not-found.tsx error.tsx global-error.tsx
+│   ├── (auth)/login/         Persona picker
+│   └── (dashboard)/<module>/ page.tsx       <- server shell: metadata + JSON-LD
+│                                page-client.tsx  <- the interactive UI
+├── components/
+│   ├── charts/               Shared Recharts primitives (lazily loaded)
+│   ├── landing/              Marketing landing page
+│   ├── seo/                  JSON-LD + module explainer (server)
+│   ├── layout/               Sidebar, topnav
+│   └── ui/                   Button, card, table, modal, tabs, toast, ...
+└── lib/
+    ├── site.ts               Brand, routes, pricing, metadata builders
+    ├── og-image.tsx          Social card renderer
+    ├── auth.ts               Demo personas and localStorage persona state
+    └── mock-data/            All demo data
+```
+
+`page.tsx` is a thin **server** component and `page-client.tsx` holds the
+interactive UI. That split is what allows each route to export its own
+`metadata` and JSON-LD — a `"use client"` module is not allowed to export
+`metadata`.
+
+### SEO
+
+- Per-route `<title>`, meta description, canonical, Open Graph and Twitter tags
+- `sitemap.xml` covering all 29 indexable routes with tiered priorities
+- `robots.txt`, `manifest.webmanifest`, generated 1200×630 social card
+- JSON-LD: `Organization`, `WebSite`, `SoftwareApplication`, `FAQPage`,
+  `BreadcrumbList` on every route, and `Product` with `Offer` pricing on
+  `/license`
+- All page content is server-rendered, so it is present in the static HTML
+
 
 ---
 
@@ -138,7 +211,7 @@ Interested in the full VEDIK School ERP system for your institution?
 
 <div align="center">
 
-**VEDIK School Management ERP** | v2.0 | 2026
+**VEDIK School Management ERP** | v2.5 | 2026
 
 *Empowering schools with smart management*
 
