@@ -1,11 +1,12 @@
 import type { NextConfig } from "next";
 
 /**
- * Deploys to Vercel as a fully static export.
+ * Deploys as a fully static export to Netlify.
  *
  * `NEXT_PUBLIC_SITE_URL` is not read here -- it is consumed by src/lib/site.ts,
  * which uses it for metadataBase, canonical URLs, the sitemap and JSON-LD.
- * See .env.example.
+ * Set it in Netlify (Site settings > Environment variables) when deploying to a
+ * preview or custom domain. See .env.example and netlify.toml.
  *
  * `NEXT_PUBLIC_BASE_PATH` should stay empty for a domain-root deploy. If the
  * demo is ever served from a sub-path, set both it and NEXT_PUBLIC_SITE_URL to

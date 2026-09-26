@@ -10,11 +10,26 @@ import type { Metadata } from "next";
  * Safe to import from both server and client components.
  */
 
+/**
+ * Public origin, used for every absolute URL the site emits.
+ *
+ * `NEXT_PUBLIC_SITE_URL` wins when it is set, which is what you want for a
+ * preview or custom domain. The fallback is the live production host rather
+ * than localhost on purpose: if the variable is ever missing, a localhost
+ * fallback ships a site whose canonical, og:url, robots.txt and sitemap all
+ * point at http://localhost:3000, which tells search engines to ignore the
+ * whole domain. Failing to the real host is far safer than failing to localhost.
+ */
+const PRODUCTION_SITE_URL = "https://vedik-demo.netlify.app";
+
 const RAW_SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3000";
+  process.env.NEXT_PUBLIC_SITE_URL?.trim() || PRODUCTION_SITE_URL;
 
 /** Origin + optional basePath, normalised without a trailing slash. */
 export const SITE_URL = RAW_SITE_URL.replace(/\/+$/, "");
+
+/** True when no env override is in play, i.e. URLs point at production. */
+export const USING_DEFAULT_SITE_URL = !process.env.NEXT_PUBLIC_SITE_URL?.trim();
 
 export const SITE = {
   name: "VEDIK School ERP",

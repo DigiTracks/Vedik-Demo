@@ -1,0 +1,17 @@
+# Netlify build configuration.
+#
+# This project is a fully static export (`output: "export"` in next.config.ts),
+# so Netlify only needs to run the build and publish the `out/` directory.
+#
+# Deliberately NO @netlify/plugin-nextjs: that plugin exists to run the Next.js
+# *serverless* runtime for SSR, and this project has no server runtime. With
+# `output: "export"` the build output is plain HTML/CSS/JS in out/.
+
+[build]
+  command = "npm run build"
+  publish = "out"
+
+[build.environment]
+  # Matches the Node version used locally and avoids Netlify's default image
+  # drifting to an unsupported major.
+  NODE_VERSION = "20"
